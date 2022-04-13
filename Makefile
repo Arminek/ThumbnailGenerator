@@ -8,6 +8,7 @@ PHP_CONT = $(DOCKER_COMP) exec php
 PHP      = $(PHP_CONT) php
 COMPOSER = $(PHP_CONT) composer
 SYMFONY  = $(PHP_CONT) bin/console
+TESTS	 = $(PHP_CONT) bin/phpunit
 
 # Misc
 .DEFAULT_GOAL = help
@@ -51,3 +52,8 @@ sf: ## List all Symfony commands or pass the parameter "c=" to run a given comma
 
 cc: c=c:c ## Clear the cache
 cc: sf
+
+## —— PHP Unit 🧪 —————————————————————————————————————————————————————————————
+test: ## Run php unit you can pass parameter "c="
+	@$(eval c ?=)
+	@$(TESTS) $(c)

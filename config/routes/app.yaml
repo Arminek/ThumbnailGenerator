@@ -1,0 +1,4 @@
+greetings:
+    path: /v1/greetings/{name}
+    methods: [GET]
+    controller: App\Infrastructure\Controller\Greetings
