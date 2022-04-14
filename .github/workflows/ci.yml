@@ -6,7 +6,8 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: arminek/thumbnail-generator
+  PHP_IMAGE_NAME: arminek/thumbnail-generator-php
+  CADDY_IMAGE_NAME: arminek/thumbnail-generator-caddy
 
 jobs:
   plan:
@@ -23,10 +24,10 @@ jobs:
         with:
           cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
       - run: |
-          cd 4games/matchmaking/terraform
+          cd terraform
           terraform init
           terraform validate
-          terraform plan -var="ghcr_username=${{ secrets.GHCR_USERNAME }}" -var="ghcr_email=${{ secrets.GHCR_EMAIL }}"  -var="ghcr_password=${{ secrets.GHCR_PASSWORD }}" -var="app_docker_image=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.vars.outputs.sha_short }}" -var="digital_ocean_access_token=${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}" -lock=false
+          terraform plan -var="ghcr_username=${{ secrets.GHCR_USERNAME }}" -var="ghcr_email=${{ secrets.GHCR_EMAIL }}"  -var="ghcr_password=${{ secrets.GHCR_PASSWORD }}" -var="app_server_docker_image=${{ env.REGISTRY }}/${{ env.CADDY_IMAGE_NAME }}:${{ steps.vars.outputs.sha_short }}" -var="app_php_docker_image=${{ env.REGISTRY }}/${{ env.PHP_IMAGE_NAME }}:${{ steps.vars.outputs.sha_short }}" -var="digital_ocean_access_token=${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}" -lock=false
 
   app:
     runs-on: ubuntu-20.04
@@ -58,7 +59,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v3
         with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-php
+          images: ${{ env.REGISTRY }}/${{ env.PHP_IMAGE_NAME }}
           tags: |-
             type=sha,enable=true,priority=100,prefix=sha-,suffix=,format=long
             type=ref,event=branch
@@ -97,7 +98,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v3
         with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-caddy
+          images: ${{ env.REGISTRY }}/${{ env.CADDY_IMAGE_NAME }}
           tags: |-
             type=sha,enable=true,priority=100,prefix=sha-,suffix=,format=long
             type=ref,event=branch
@@ -132,4 +133,4 @@ jobs:
       - run: |
           cd terraform
           terraform init
-          terraform apply -auto-approve -var="ghcr_username=${{ secrets.GHCR_USERNAME }}" -var="ghcr_email=${{ secrets.GHCR_EMAIL }}"  -var="ghcr_password=${{ secrets.GHCR_PASSWORD }}" -var="app_docker_image=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.vars.outputs.sha_short }}" -var="digital_ocean_access_token=${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}" -lock-timeout=10m
+          terraform apply -auto-approve -var="ghcr_username=${{ secrets.GHCR_USERNAME }}" -var="ghcr_email=${{ secrets.GHCR_EMAIL }}"  -var="ghcr_password=${{ secrets.GHCR_PASSWORD }}" -var="app_server_docker_image=${{ env.REGISTRY }}/${{ env.CADDY_IMAGE_NAME }}:${{ steps.vars.outputs.sha_short }}" -var="app_php_docker_image=${{ env.REGISTRY }}/${{ env.PHP_IMAGE_NAME }}:${{ steps.vars.outputs.sha_short }}" -var="digital_ocean_access_token=${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}" -lock-timeout=10m
