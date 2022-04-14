@@ -36,7 +36,9 @@ jobs:
       - uses: actions/checkout@v2
       - name: App tests
         run: |
-          make test-no-init
+          make up
+          make vendor
+          make test
 
   build-and-publish-image-php:
     runs-on: ubuntu-20.04

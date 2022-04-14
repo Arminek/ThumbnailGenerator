@@ -10,7 +10,6 @@ PHP      = $(PHP_CONT) php
 COMPOSER = $(PHP_CONT) composer
 SYMFONY  = $(PHP_CONT) bin/console
 TESTS	 = $(PHP_CONT) bin/phpunit
-TESTS_NO_INIT = $(PHP_RUN) bin/phpunit
 
 # Misc
 .DEFAULT_GOAL = help
@@ -59,7 +58,3 @@ cc: sf
 test: ## Run php unit you can pass parameter "c="
 	@$(eval c ?=)
 	@$(TESTS) $(c)
-
-test-no-init:
-	@$(eval c ?=)
-	@$(TESTS_NO_INIT) $(c)
