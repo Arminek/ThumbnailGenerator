@@ -29,6 +29,15 @@ provider "kubectl" {
     alias                  = "fra1"
 }
 
+provider "helm" {
+    kubernetes {
+        host                   = data.digitalocean_kubernetes_cluster.fra1.endpoint
+        cluster_ca_certificate = base64decode(data.digitalocean_kubernetes_cluster.fra1.kube_config[0].cluster_ca_certificate)
+        token                  = data.digitalocean_kubernetes_cluster.fra1.kube_config[0].token
+    }
+    alias = "fra1"
+}
+
 provider "kubernetes" {
     host                   = data.digitalocean_kubernetes_cluster.sgp1.endpoint
     cluster_ca_certificate = base64decode(data.digitalocean_kubernetes_cluster.sgp1.kube_config[0].cluster_ca_certificate)
@@ -44,6 +53,15 @@ provider "kubectl" {
     alias                  = "sgp1"
 }
 
+provider "helm" {
+    kubernetes {
+        host                   = data.digitalocean_kubernetes_cluster.sgp1.endpoint
+        cluster_ca_certificate = base64decode(data.digitalocean_kubernetes_cluster.sgp1.kube_config[0].cluster_ca_certificate)
+        token                  = data.digitalocean_kubernetes_cluster.sgp1.kube_config[0].token
+    }
+    alias = "sgp1"
+}
+
 provider "kubernetes" {
     host                   = data.digitalocean_kubernetes_cluster.nyc1.endpoint
     cluster_ca_certificate = base64decode(data.digitalocean_kubernetes_cluster.nyc1.kube_config[0].cluster_ca_certificate)
@@ -57,4 +75,13 @@ provider "kubectl" {
     token                  = data.digitalocean_kubernetes_cluster.nyc1.kube_config[0].token
     load_config_file       = false
     alias                  = "nyc1"
+}
+
+provider "helm" {
+    kubernetes {
+        host                   = data.digitalocean_kubernetes_cluster.nyc1.endpoint
+        cluster_ca_certificate = base64decode(data.digitalocean_kubernetes_cluster.nyc1.kube_config[0].cluster_ca_certificate)
+        token                  = data.digitalocean_kubernetes_cluster.nyc1.kube_config[0].token
+    }
+    alias = "nyc1"
 }
