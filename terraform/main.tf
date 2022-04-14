@@ -48,6 +48,7 @@ module "app_fra1" {
     sub_domain                 = "fra1.thumbnail"
     providers                  = {
         kubernetes = kubernetes.fra1
+        helm       = helm.fra1
         kubectl    = kubectl.fra1
     }
 }
