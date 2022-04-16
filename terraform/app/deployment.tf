@@ -125,6 +125,10 @@ resource "kubernetes_deployment_v1" "main" {
                         value = "!ChangeMe!"
                     }
                     env {
+                        name = "AWS_THUMBNAIL_BUCKET"
+                        value = var.aws_s3_thumbnail_bucket_name
+                    }
+                    env {
                         name = "APP_ENV"
                         value = var.env
                     }

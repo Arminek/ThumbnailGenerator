@@ -66,3 +66,7 @@ variable "aws_access_key" {
 variable "aws_secret_key" {
     type = string
 }
+
+variable "aws_s3_thumbnail_bucket_name" {
+    type = string
+}

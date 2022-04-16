@@ -12,9 +12,19 @@ module "app_fra1" {
     module_namespace = "default"
     aws_access_key = var.aws_access_key
     aws_secret_key = var.aws_secret_key
+    aws_s3_thumbnail_bucket_name = var.aws_s3_thumbnail_bucket_name
     providers                  = {
         kubernetes = kubernetes.fra1
         helm       = helm.fra1
         kubectl    = kubectl.fra1
+    }
+}
+
+module "aws_s3_bucket_fra1" {
+    source = "./aws_s3_bucket"
+    bucket = var.aws_s3_thumbnail_bucket_name
+    acl = "public-read"
+    providers = {
+        aws = aws.fra1
     }
 }

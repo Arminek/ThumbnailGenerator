@@ -26,6 +26,7 @@ RUN set -eux; \
 		icu-dev \
 		libzip-dev \
 		zlib-dev \
+		libmagickwand-dev\
 	; \
 	\
 	docker-php-ext-configure zip; \
@@ -35,11 +36,13 @@ RUN set -eux; \
 	; \
 	pecl install \
 		apcu-${APCU_VERSION} \
+		imagick\
 	; \
 	pecl clear-cache; \
 	docker-php-ext-enable \
 		apcu \
 		opcache \
+		imagick\
 	; \
 	\
 	runDeps="$( \
