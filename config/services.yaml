@@ -24,5 +24,13 @@ services:
         public: true
         arguments:
             $rootDir: '%kernel.project_dir%'
+
+    App\Infrastructure\Cli\GenerateThumbnail:
+        public: true
+        arguments:
+            $rootDir: '%kernel.project_dir%'
+        tags:
+            - { name: 'console.command', command: 'app:generate-thumbnail' }
+
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
