@@ -1,4 +1,4 @@
-resource "kubernetes_secret" "aws" {
+resource "kubernetes_secret_v1" "aws" {
     metadata {
         name = "aws"
         namespace = "default"
