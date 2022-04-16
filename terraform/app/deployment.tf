@@ -30,15 +30,15 @@ resource "kubernetes_deployment_v1" "main" {
 
             spec {
                 volume {
-                    name = "php_socket"
+                    name = "php-socket"
                     empty_dir {}
                 }
                 volume {
-                    name = "caddy_data"
+                    name = "caddy-data"
                     empty_dir {}
                 }
                 volume {
-                    name = "caddy_config"
+                    name = "caddy-config"
                     empty_dir {}
                 }
 
@@ -56,15 +56,15 @@ resource "kubernetes_deployment_v1" "main" {
                     }
                     volume_mount {
                         mount_path = "/var/run/php"
-                        name       = "php_socket"
+                        name       = "php-socket"
                     }
                     volume_mount {
                         mount_path = "/data"
-                        name       = "caddy_data"
+                        name       = "caddy-data"
                     }
                     volume_mount {
                         mount_path = "/config"
-                        name       = "caddy_config"
+                        name       = "caddy-config"
                     }
                     port {
                         container_port = 80
@@ -95,7 +95,7 @@ resource "kubernetes_deployment_v1" "main" {
                     name              = "php"
                     volume_mount {
                         mount_path = "/var/run/php"
-                        name       = "php_socket"
+                        name       = "php-socket"
                     }
                     env {
                         name = "MERCURE_JWT_SECRET"
