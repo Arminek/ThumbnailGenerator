@@ -58,3 +58,11 @@ variable "app_php_docker_image" {
 variable "app_server_docker_image" {
     type = string
 }
+
+variable "aws_access_key" {
+    type = string
+}
+
+variable "aws_secret_key" {
+    type = string
+}
