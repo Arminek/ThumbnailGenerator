@@ -26,6 +26,7 @@ RUN set -eux; \
 		icu-dev \
 		libzip-dev \
 		zlib-dev \
+		imagemagick \
 	; \
 	\
 	docker-php-ext-configure zip; \
