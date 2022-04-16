@@ -103,6 +103,24 @@ resource "kubernetes_deployment_v1" "main" {
                         name       = "php-socket"
                     }
                     env {
+                        name = "AWS_ACCESS_KEY_ID"
+                        value_from {
+                            secret_key_ref {
+                                name = "aws"
+                                key = "access_key"
+                            }
+                        }
+                    }
+                    env {
+                        name = "AWS_SECRET_ACCESS_KEY"
+                        value_from {
+                            secret_key_ref {
+                                name = "aws"
+                                key = "secret_key"
+                            }
+                        }
+                    }
+                    env {
                         name = "MERCURE_JWT_SECRET"
                         value = "!ChangeMe!"
                     }

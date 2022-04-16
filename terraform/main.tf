@@ -10,6 +10,8 @@ module "app_fra1" {
     main_domain                = "arminek.xyz"
     sub_domain                 = "fra1-thumbnail"
     module_namespace = "default"
+    aws_access_key = var.aws_access_key
+    aws_secret_key = var.aws_secret_key
     providers                  = {
         kubernetes = kubernetes.fra1
         helm       = helm.fra1
