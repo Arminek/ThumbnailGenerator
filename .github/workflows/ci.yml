@@ -27,7 +27,7 @@ jobs:
           cd terraform
           terraform init
           terraform validate
-          terraform plan -var="ghcr_username=${{ secrets.GHCR_USERNAME }}" -var="ghcr_email=${{ secrets.GHCR_EMAIL }}"  -var="ghcr_password=${{ secrets.GHCR_PASSWORD }}" -var="app_server_docker_image=${{ env.REGISTRY }}/${{ env.CADDY_IMAGE_NAME }}:${{ steps.vars.outputs.sha_short }}" -var="app_php_docker_image=${{ env.REGISTRY }}/${{ env.PHP_IMAGE_NAME }}:${{ steps.vars.outputs.sha_short }}" -var="digital_ocean_access_token=${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}" -lock=false
+          terraform plan -var="ghcr_username=${{ secrets.GHCR_USERNAME }}" -var="ghcr_email=${{ secrets.GHCR_EMAIL }}"  -var="ghcr_password=${{ secrets.GHCR_PASSWORD }}" -var="app_server_docker_image=${{ env.REGISTRY }}/${{ env.CADDY_IMAGE_NAME }}:${{ steps.vars.outputs.sha_short }}" -var="app_php_docker_image=${{ env.REGISTRY }}/${{ env.PHP_IMAGE_NAME }}:${{ steps.vars.outputs.sha_short }}" -var="digital_ocean_access_token=${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}" -var="aws_access_key=${{ secrets.AWS_ACCESS_KEY_ID }}" -var="aws_secret_key=${{ secrets.AWS_SECRET_KEY }}" -lock=false
 
   app:
     runs-on: ubuntu-20.04
@@ -132,4 +132,4 @@ jobs:
       - run: |
           cd terraform
           terraform init
-          terraform apply -auto-approve -var="ghcr_username=${{ secrets.GHCR_USERNAME }}" -var="ghcr_email=${{ secrets.GHCR_EMAIL }}"  -var="ghcr_password=${{ secrets.GHCR_PASSWORD }}" -var="app_server_docker_image=${{ env.REGISTRY }}/${{ env.CADDY_IMAGE_NAME }}:${{ steps.vars.outputs.sha_short }}" -var="app_php_docker_image=${{ env.REGISTRY }}/${{ env.PHP_IMAGE_NAME }}:${{ steps.vars.outputs.sha_short }}" -var="digital_ocean_access_token=${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}" -lock-timeout=10m
+          terraform apply -auto-approve -var="ghcr_username=${{ secrets.GHCR_USERNAME }}" -var="ghcr_email=${{ secrets.GHCR_EMAIL }}"  -var="ghcr_password=${{ secrets.GHCR_PASSWORD }}" -var="app_server_docker_image=${{ env.REGISTRY }}/${{ env.CADDY_IMAGE_NAME }}:${{ steps.vars.outputs.sha_short }}" -var="app_php_docker_image=${{ env.REGISTRY }}/${{ env.PHP_IMAGE_NAME }}:${{ steps.vars.outputs.sha_short }}" -var="digital_ocean_access_token=${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}" -var="aws_access_key=${{ secrets.AWS_ACCESS_KEY_ID }}" -var="aws_secret_key=${{ secrets.AWS_SECRET_KEY }}" -lock-timeout=10m

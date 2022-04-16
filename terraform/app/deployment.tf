@@ -71,12 +71,12 @@ resource "kubernetes_deployment_v1" "main" {
                     }
                     resources {
                         limits = {
-                            cpu    = "0.5"
-                            memory = "256Mi"
+                            cpu    = "1"
+                            memory = "512Mi"
                         }
                         requests = {
-                            cpu    = "0.3"
-                            memory = "128Mi"
+                            cpu    = "0.5"
+                            memory = "256Mi"
                         }
                     }
                     liveness_probe {
@@ -114,12 +114,12 @@ resource "kubernetes_deployment_v1" "main" {
                     }
                     resources {
                         limits = {
-                            cpu    = "0.5"
-                            memory = "512Mi"
+                            cpu    = "2"
+                            memory = "600Mi"
                         }
                         requests = {
-                            cpu    = "0.3"
-                            memory = "256Mi"
+                            cpu    = "1"
+                            memory = "500Mi"
                         }
                     }
                     liveness_probe {
