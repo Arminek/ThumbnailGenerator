@@ -49,12 +49,7 @@ resource "kubernetes_ingress_v1" "main" {
         }
 
         tls {
-            hosts = [
-                format("*.%s", var.main_domain),
-                format("%s", var.main_domain),
-                format("*.%s.%s", var.sub_domain, var.main_domain),
-                format("%s.%s", var.sub_domain, var.main_domain),
-            ]
+            hosts = [format("*.%s", var.main_domain)]
             secret_name = "secret-tls"
         }
     }
