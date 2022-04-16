@@ -26,7 +26,6 @@ RUN set -eux; \
 		icu-dev \
 		libzip-dev \
 		zlib-dev \
-		imagemagick \
 	; \
 	\
 	docker-php-ext-configure zip; \
@@ -36,13 +35,11 @@ RUN set -eux; \
 	; \
 	pecl install \
 		apcu-${APCU_VERSION} \
-		imagick\
 	; \
 	pecl clear-cache; \
 	docker-php-ext-enable \
 		apcu \
 		opcache \
-		imagick\
 	; \
 	\
 	runDeps="$( \
@@ -54,6 +51,11 @@ RUN set -eux; \
 	apk add --no-cache --virtual .phpexts-rundeps $runDeps; \
 	\
 	apk del .build-deps
+
+ADD https://raw.githubusercontent.com/mlocati/docker-php-extension-installer/master/install-php-extensions /usr/local/bin/
+
+RUN chmod uga+x /usr/local/bin/install-php-extensions && sync && \
+    install-php-extensions imagick
 
 COPY docker/php/docker-healthcheck.sh /usr/local/bin/docker-healthcheck
 RUN chmod +x /usr/local/bin/docker-healthcheck
