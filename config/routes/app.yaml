@@ -1,9 +1,9 @@
-greetings:
-    path: /v1/greetings/{name}
-    methods: [GET]
-    controller: App\Infrastructure\Controller\Greetings
-
 _health:
     path: /
     methods: [GET]
     controller: App\Infrastructure\Controller\Health
+
+_doc:
+    path: /_doc
+    methods: [GET]
+    controller: App\Infrastructure\Controller\Documentation

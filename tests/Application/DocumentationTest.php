@@ -8,7 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\BrowserKit\AbstractBrowser;
 use Symfony\Component\HttpFoundation\Request;
 
-final class GreetingsTest extends WebTestCase
+final class DocumentationTest extends WebTestCase
 {
     private AbstractBrowser $client;
 
@@ -22,13 +22,9 @@ final class GreetingsTest extends WebTestCase
     /**
      * @test
      */
-    public function it_greets_caller(): void
+    public function it_returns_open_api_documentation(): void
     {
-        $this->client->request(Request::METHOD_GET, '/v1/greetings/Arminek');
-
+        $this->client->request(Request::METHOD_GET, '/_doc');
         $this->assertResponseIsSuccessful();
-        $content = json_decode($this->client->getResponse()->getContent(), true);
-        $this->assertArrayHasKey('message', $content);
-        $this->assertEquals('Hello Arminek!', $content['message']);
     }
 }

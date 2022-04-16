@@ -1,0 +1,48 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Thumbnail generator",
+    "version": "0.0.1"
+  },
+  "servers": [
+    {
+      "description": "Frankfurt - Production - API",
+      "url": "https://fra1-thumbnail.arminek.xyz"
+    }
+  ],
+  "paths": {
+    "/_doc": {
+      "get": {
+        "summary": "Open api schema in json format. Can be used to generate API client",
+        "responses": {
+          "200": {
+            "description": "Open api schema in json format"
+          }
+        }
+      }
+    },
+    "/": {
+      "get": {
+        "summary": "Health status",
+        "responses": {
+          "200": {
+            "description": "Returns health status of the service",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Healthy"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
