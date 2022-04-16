@@ -58,3 +58,9 @@ cc: sf
 test: ## Run php unit you can pass parameter "c="
 	@$(eval c ?=)
 	@$(TESTS) $(c)
+
+test-run:
+	docker-compose  run --no-deps --rm php sh -c "\
+		composer install; \
+		bin/phpunit \
+	"

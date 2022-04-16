@@ -35,9 +35,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: App tests
-        run: |
-          make start
-          make test
+        run: make test-run
 
   build-and-publish-image-php:
     runs-on: ubuntu-20.04
