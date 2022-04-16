@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Application;
 
+use App\Infrastructure\Cli\GenerateThumbnail;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -13,18 +14,21 @@ final class GenerateThumbnailTest extends KernelTestCase
 {
     private const TEST_UPLOAD_DIR = '/tests/upload';
 
-    private readonly Application $application;
     private readonly string $rootDir;
     private readonly Filesystem $filesystem;
+    private readonly CommandTester $commandTester;
 
     protected function setUp(): void
     {
         parent::setUp();
 
         $kernel = self::bootKernel();
-        $this->application = new Application($kernel);
         $this->filesystem = new Filesystem();
         $this->rootDir = $kernel->getContainer()->getParameter('kernel.project_dir');
+
+        $application = new Application($kernel);
+        $command = $application->find(GenerateThumbnail::getDefaultName());
+        $this->commandTester = new CommandTester($command);
     }
 
     /**
@@ -32,12 +36,10 @@ final class GenerateThumbnailTest extends KernelTestCase
      */
     public function it_has_default_upload_directory(): void
     {
-        $command = $this->application->find('app:generate-thumbnail');
-        $commandTester = new CommandTester($command);
-        $commandTester->execute([]);
+        $this->commandTester->execute([]);
 
-        $output = $commandTester->getDisplay();
-        $commandTester->assertCommandIsSuccessful();
+        $output = $this->commandTester->getDisplay();
+        $this->commandTester->assertCommandIsSuccessful();
         $this->assertStringContainsString(sprintf('Current upload directory: %s/upload', $this->rootDir), $output);
     }
 
@@ -46,29 +48,25 @@ final class GenerateThumbnailTest extends KernelTestCase
      */
     public function it_uses_parameter_for_upload_directory(): void
     {
-        $command = $this->application->find('app:generate-thumbnail');
-        $commandTester = new CommandTester($command);
-        $commandTester->execute(['--upload-dir' => self::TEST_UPLOAD_DIR]);
+        $this->commandTester->execute(['--upload-dir' => self::TEST_UPLOAD_DIR]);
 
-        $output = $commandTester->getDisplay();
-        $commandTester->assertCommandIsSuccessful();
+        $output = $this->commandTester->getDisplay();
+        $this->commandTester->assertCommandIsSuccessful();
         $this->assertStringContainsString(sprintf('Current upload directory: %s/tests/upload', $this->rootDir), $output);
     }
 
     /**
      * @test
      */
-    public function it_lists_files_as_options_for_thumbnail(): void
+    public function it_lists_files_as_options_for_thumbnails(): void
     {
         $images = ['a.jpg', 'b.jpg', 'c.jpg'];
         $this->thereAreSomeImages($images);
-        $command = $this->application->find('app:generate-thumbnail');
-        $commandTester = new CommandTester($command);
-        $commandTester->setInputs(['b.jpg']);
-        $commandTester->execute(['--upload-dir' => self::TEST_UPLOAD_DIR]);
+        $this->commandTester->setInputs(['b.jpg']);
+        $this->commandTester->execute(['--upload-dir' => self::TEST_UPLOAD_DIR]);
 
-        $output = $commandTester->getDisplay();
-        $commandTester->assertCommandIsSuccessful();
+        $output = $this->commandTester->getDisplay();
+        $this->commandTester->assertCommandIsSuccessful();
         $this->assertStringContainsString('Which files?', $output);
 
         foreach ($images as $image) {

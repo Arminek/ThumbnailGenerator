@@ -66,6 +66,11 @@ final class GenerateThumbnail extends Command
 
     private function pathFromInput(InputInterface $input): string
     {
-        return sprintf('%s%s', $this->rootDir, $input->getOption('upload-dir'));
+        $uploadDir = trim($input->getOption('upload-dir'));
+        if ('/' !== $uploadDir[0]) {
+            $uploadDir = '/'.$uploadDir;
+        }
+
+        return sprintf('%s%s', $this->rootDir, $uploadDir);
     }
 }
