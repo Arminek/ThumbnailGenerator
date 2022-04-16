@@ -26,7 +26,6 @@ RUN set -eux; \
 		icu-dev \
 		libzip-dev \
 		zlib-dev \
-		libmagickwand-dev\
 	; \
 	\
 	docker-php-ext-configure zip; \
