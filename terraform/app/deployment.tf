@@ -54,6 +54,10 @@ resource "kubernetes_deployment_v1" "main" {
                         name = "MERCURE_SUBSCRIBER_JWT_KEY"
                         value = "!ChangeMe!"
                     }
+                    env {
+                        name = "SERVER_NAME"
+                        value = ":80"
+                    }
                     volume_mount {
                         mount_path = "/var/run/php"
                         name       = "php-socket"
@@ -81,6 +85,7 @@ resource "kubernetes_deployment_v1" "main" {
                     }
                     liveness_probe {
                         http_get {
+                            scheme = "HTTP"
                             path = "/v1/greetings/world"
                             port = 80
                         }
@@ -103,7 +108,7 @@ resource "kubernetes_deployment_v1" "main" {
                     }
                     env {
                         name = "APP_ENV"
-                        value = "prod"
+                        value = var.env
                     }
                     env {
                         name = "APP_SECRET"
