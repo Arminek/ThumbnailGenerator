@@ -1,6 +1,2 @@
-kernel:
-    resource: ../src/Kernel.php
-    type: annotation
-
 app:
     resource: routes/app.yaml

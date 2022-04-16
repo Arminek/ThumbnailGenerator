@@ -22,7 +22,7 @@ final class HealthTest extends WebTestCase
     /**
      * @test
      */
-    public function it_greets_caller(): void
+    public function it_checks_service_health(): void
     {
         $this->client->request(Request::METHOD_GET, '/');
 
