@@ -86,7 +86,7 @@ resource "kubernetes_deployment_v1" "main" {
                     liveness_probe {
                         http_get {
                             scheme = "HTTP"
-                            path = "/v1/greetings/world"
+                            path = "/"
                             port = 80
                         }
 
