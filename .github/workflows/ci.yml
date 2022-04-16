@@ -36,8 +36,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: App tests
         run: |
-          make up
-          make vendor
+          make start
           make test
 
   build-and-publish-image-php:
