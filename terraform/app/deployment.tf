@@ -71,21 +71,21 @@ resource "kubernetes_deployment_v1" "main" {
                     }
                     resources {
                         limits = {
-                            cpu    = "1"
-                            memory = "512Mi"
-                        }
-                        requests = {
                             cpu    = "0.5"
                             memory = "256Mi"
+                        }
+                        requests = {
+                            cpu    = "0.3"
+                            memory = "128Mi"
                         }
                     }
                     liveness_probe {
                         http_get {
-                            path = "/"
+                            path = "/v1/greetings/world"
                             port = 80
                         }
 
-                        initial_delay_seconds = 3
+                        initial_delay_seconds = 10
                         period_seconds        = 10
                     }
                 }
@@ -114,22 +114,13 @@ resource "kubernetes_deployment_v1" "main" {
                     }
                     resources {
                         limits = {
-                            cpu    = "2"
-                            memory = "600Mi"
+                            cpu    = "0.5"
+                            memory = "512Mi"
                         }
                         requests = {
-                            cpu    = "1"
-                            memory = "500Mi"
+                            cpu    = "0.3"
+                            memory = "256Mi"
                         }
-                    }
-                    liveness_probe {
-                        http_get {
-                            path = "/"
-                            port = 9000
-                        }
-
-                        initial_delay_seconds = 3
-                        period_seconds        = 10
                     }
                 }
                 image_pull_secrets {
