@@ -18,4 +18,5 @@
 * make cc - Clear the cache
 
 #### PHP Unit 🧪
-* make test - Run php unit you can pass parameter "c="
+* make test - Run php unit on existing container require (make up) you can pass parameter "c="
+* make test-run Run php unit on fresh container used in CI/CD

@@ -55,11 +55,11 @@ cc: c=c:c ## Clear the cache
 cc: sf
 
 ## —— PHP Unit 🧪 —————————————————————————————————————————————————————————————
-test: ## Run php unit you can pass parameter "c="
+test: ## Run php unit on existing container require (make up) you can pass parameter "c="
 	@$(eval c ?=)
 	@$(TESTS) $(c)
 
-test-run:
+test-run: ## Run php unit on fresh container used in CI/CD
 	docker-compose  run --no-deps --rm php sh -c "\
 		composer install; \
 		bin/phpunit \
