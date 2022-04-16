@@ -7,7 +7,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 final class Documentation
 {
-    public function __construct(private string $rootDir) {}
+    public function __construct(private readonly string $rootDir) {}
 
     public function __invoke(): Response
     {

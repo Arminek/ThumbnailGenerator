@@ -11,6 +11,7 @@ use Symfony\Component\Console\Tester\CommandTester;
 final class GenerateThumbnailTest extends KernelTestCase
 {
     private Application $application;
+    private readonly string $rootDir;
 
     protected function setUp(): void
     {
@@ -18,6 +19,7 @@ final class GenerateThumbnailTest extends KernelTestCase
 
         $kernel = self::bootKernel();
         $this->application = new Application($kernel);
+        $this->rootDir = $kernel->getContainer()->getParameter('kernel.project_dir');
     }
 
     /**
@@ -27,9 +29,14 @@ final class GenerateThumbnailTest extends KernelTestCase
     {
         $command = $this->application->find('app:generate-thumbnail');
         $commandTester = new CommandTester($command);
+        $commandTester->setInputs(["no"]);
         $commandTester->execute([]);
         $commandTester->assertCommandIsSuccessful();
         $output = $commandTester->getDisplay();
+        $this->assertStringContainsString(
+            sprintf('Do you want to change upload directory? Current (%s/upload)', $this->rootDir),
+            $output
+        );
         $this->assertStringContainsString('Done!', $output);
     }
 }
