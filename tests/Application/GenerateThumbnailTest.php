@@ -5,6 +5,10 @@ declare(strict_types=1);
 namespace App\Tests\Application;
 
 use App\Infrastructure\Cli\GenerateThumbnail;
+use Imagine\Image\Box;
+use Imagine\Image\ImagineInterface;
+use Imagine\Image\Palette\RGB;
+use Imagine\Imagick\Imagine;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -17,6 +21,7 @@ final class GenerateThumbnailTest extends KernelTestCase
     private readonly string $rootDir;
     private readonly Filesystem $filesystem;
     private readonly CommandTester $commandTester;
+    private readonly ImagineInterface $imagine;
 
     protected function setUp(): void
     {
@@ -29,6 +34,8 @@ final class GenerateThumbnailTest extends KernelTestCase
         $application = new Application($kernel);
         $command = $application->find(GenerateThumbnail::getDefaultName());
         $this->commandTester = new CommandTester($command);
+
+        $this->imagine = new Imagine();
     }
 
     /**
@@ -94,8 +101,18 @@ final class GenerateThumbnailTest extends KernelTestCase
         }
 
         foreach ($images as $image) {
-            $this->filesystem->touch(sprintf('%s/%s', $this->path(), $image));
+            $this->createImage(sprintf('%s/%s', $this->path(), $image));
         }
+    }
+
+    private function createImage(string $path): void
+    {
+        $palette = new RGB();
+        $size  = new Box(400, 300);
+        $color = $palette->color('#000', 0);
+        $this->imagine
+            ->create($size, $color)
+            ->save($path);
     }
 
     private function path(): string
