@@ -121,6 +121,10 @@ resource "kubernetes_deployment_v1" "main" {
                         }
                     }
                     env {
+                        name = "AWS_REGION"
+                        value = "eu-central-1"
+                    }
+                    env {
                         name = "MERCURE_JWT_SECRET"
                         value = "!ChangeMe!"
                     }

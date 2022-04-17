@@ -21,3 +21,5 @@
 
 /upload
 /tests/upload
+
+docker-compose.secret.yml

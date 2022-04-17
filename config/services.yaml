@@ -32,5 +32,18 @@ services:
         tags:
             - { name: 'console.command', command: 'app:generate-thumbnail' }
 
+    App\Application\Repository\ThumbnailRepository: '@App\Infrastructure\Repository\S3BucketThumbnailRepository'
+
+    Imagine\Imagick\Imagine:
+        public: true
+
+    Aws\S3\S3Client:
+        public: true
+        arguments:
+            - { region: '%env(string:AWS_REGION)%', version: 'latest', credentials: { key: '%env(string:AWS_ACCESS_KEY_ID)%', secret: '%env(string:AWS_SECRET_ACCESS_KEY)%' } }
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+when@test:
+    services:
+        App\Application\Repository\ThumbnailRepository: '@App\Infrastructure\Repository\InMemoryThumbnailRepository'

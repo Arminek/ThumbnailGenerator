@@ -24,6 +24,10 @@ services:
       MERCURE_URL: ${CADDY_MERCURE_URL:-http://caddy/.well-known/mercure}
       MERCURE_PUBLIC_URL: https://${SERVER_NAME:-localhost}/.well-known/mercure
       MERCURE_JWT_SECRET: ${CADDY_MERCURE_JWT_SECRET:-!ChangeMe!}
+      AWS_ACCESS_KEY_ID: changeMe
+      AWS_SECRET_ACCESS_KEY: changeMe
+      AWS_REGION: eu-central-1
+      AWS_THUMBNAIL_BUCKET: thumbnails.arminek.s3.bucket
 
   caddy:
     build:
