@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Cli;
 
+use App\Application\Command\GenerateThumbnail;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -11,17 +12,23 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
+use Symfony\Component\Finder\SplFileInfo;
+use Symfony\Component\Messenger\MessageBusInterface;
 
-final class GenerateThumbnail extends Command
+final class GenerateThumbnailCommand extends Command
 {
     private const DEFAULT_UPLOAD_DIR = '/upload';
+    private const DEFAULT_WIDTH = 150;
+    private const DEFAULT_HEIGHT = 150;
 
     protected static $defaultName = 'app:generate-thumbnail';
     private readonly Finder $finder;
     private readonly Filesystem $filesystem;
 
-    public function __construct(private readonly string $rootDir)
-    {
+    public function __construct(
+        private readonly string $rootDir,
+        private readonly MessageBusInterface $messageBus
+    ) {
         $this->finder = new Finder();
         $this->filesystem = new Filesystem();
         parent::__construct();
@@ -37,6 +44,20 @@ final class GenerateThumbnail extends Command
                 InputOption::VALUE_OPTIONAL,
                 sprintf('Choose within %s as your upload directory', $this->rootDir),
                 self::DEFAULT_UPLOAD_DIR
+            )
+            ->addOption(
+                'width',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Width of the thumbnails',
+                self::DEFAULT_WIDTH
+            )
+            ->addOption(
+                'height',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Height of the thumbnails',
+                self::DEFAULT_HEIGHT
             );
     }
 
@@ -49,16 +70,24 @@ final class GenerateThumbnail extends Command
         }
 
         $this->finder->in($path);
-        $choices = array_map(
-            fn(\SplFileInfo $file) => $file->getFilename(),
-            iterator_to_array($this->finder->files()->getIterator())
-        );
+        $choices = iterator_to_array($this->finder->files()->getIterator());
+        $choiceNames = array_map(fn(SplFileInfo $file) => $file->getFilename(), $choices);
 
-        if (count($choices) !== 0) {
+        if (count($choiceNames) !== 0) {
             $helper = $this->getHelper('question');
-            $question = new ChoiceQuestion('Which files?', $choices, 0);
+            $question = new ChoiceQuestion('Which files?', $choiceNames, 0);
             $question->setMultiselect(true);
-            $helper->ask($input, $output, $question);
+            $chosenImages = $helper->ask($input, $output, $question);
+
+            foreach ($chosenImages as $chosenImage) {
+                $this->messageBus->dispatch(
+                    new GenerateThumbnail(
+                        $choices[$chosenImage],
+                        $input->getOption('width'),
+                        $input->getOption('height')
+                    )
+                );
+            }
         }
 
         return Command::SUCCESS;

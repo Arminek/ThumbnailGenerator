@@ -16,4 +16,12 @@ final class InMemoryThumbnailRepository implements ThumbnailRepository
     {
         $this->memory[] = $thumbnail;
     }
+
+    /**
+     * @return SplFileInfo[]
+     */
+    public function findAll(): array
+    {
+        return $this->memory;
+    }
 }

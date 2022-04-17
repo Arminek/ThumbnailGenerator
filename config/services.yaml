@@ -25,12 +25,26 @@ services:
         arguments:
             $rootDir: '%kernel.project_dir%'
 
-    App\Infrastructure\Cli\GenerateThumbnail:
+    App\Infrastructure\Cli\GenerateThumbnailCommand:
         public: true
         arguments:
             $rootDir: '%kernel.project_dir%'
         tags:
             - { name: 'console.command', command: 'app:generate-thumbnail' }
+
+    App\Infrastructure\Services\ImagineThumbnailGenerator:
+        public: true
+        arguments:
+            - '@Imagine\Imagick\Imagine'
+    
+    App\Infrastructure\Repository\S3BucketThumbnailRepository:
+        public: true
+        arguments:
+            - '@Aws\S3\S3Client'
+            - '%env(string:AWS_THUMBNAIL_BUCKET)%'
+
+    App\Infrastructure\Repository\InMemoryThumbnailRepository:
+        public: true
 
     App\Application\Repository\ThumbnailRepository: '@App\Infrastructure\Repository\S3BucketThumbnailRepository'
 

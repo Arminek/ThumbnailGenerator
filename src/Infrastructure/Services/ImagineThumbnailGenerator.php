@@ -21,14 +21,14 @@ final class ImagineThumbnailGenerator implements ThumbnailGenerator
             '%s/%s',
             $sourceImage->getPath(),
             str_replace(
-                $sourceImage->getExtension(),
-                sprintf('%s-%s.%s', $sourceImage->getFilename(), uniqid(), $sourceImage->getExtension()),
+                '.'.$sourceImage->getExtension(),
+                sprintf('-%s.%s', uniqid(), $sourceImage->getExtension()),
                 $sourceImage->getFilename()
             )
         );
 
         $this->imagine
-            ->open(sprintf('%s/%s', $sourceImage->getPath(), $sourceImage->getFilename()))
+            ->open(sprintf('%s', $sourceImage->getPathname()))
             ->thumbnail(new Box($width, $height))
             ->save($thumbnailPath);
 

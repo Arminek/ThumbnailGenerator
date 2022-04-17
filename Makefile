@@ -10,6 +10,7 @@ PHP      = $(PHP_CONT) php
 COMPOSER = $(PHP_CONT) composer
 SYMFONY  = $(PHP_CONT) bin/console
 TESTS	 = $(PHP_CONT) bin/phpunit
+SPECS	 = $(PHP_CONT) vendor/bin/phpspec run
 
 # Misc
 .DEFAULT_GOAL = help
@@ -58,9 +59,11 @@ cc: sf
 test: ## Run php unit on existing container require (make up) you can pass parameter "c="
 	@$(eval c ?=)
 	@$(TESTS) $(c)
+	@$(SPECS) $(c)
 
 test-run: ## Run php unit on fresh container used in CI/CD
 	docker-compose  run --no-deps --rm php sh -c "\
 		composer install; \
-		bin/phpunit \
+		bin/phpunit; \
+		vendor/bin/phpspec run; \
 	"

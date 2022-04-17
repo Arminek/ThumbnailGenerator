@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Application;
 
-use App\Infrastructure\Cli\GenerateThumbnail;
+use App\Infrastructure\Cli\GenerateThumbnailCommand;
+use App\Infrastructure\Repository\InMemoryThumbnailRepository;
 use Imagine\Image\Box;
 use Imagine\Image\ImagineInterface;
 use Imagine\Image\Palette\RGB;
@@ -22,6 +23,7 @@ final class GenerateThumbnailTest extends KernelTestCase
     private readonly Filesystem $filesystem;
     private readonly CommandTester $commandTester;
     private readonly ImagineInterface $imagine;
+    private readonly InMemoryThumbnailRepository $thumbnailRepository;
 
     protected function setUp(): void
     {
@@ -32,22 +34,13 @@ final class GenerateThumbnailTest extends KernelTestCase
         $this->rootDir = $kernel->getContainer()->getParameter('kernel.project_dir');
 
         $application = new Application($kernel);
-        $command = $application->find(GenerateThumbnail::getDefaultName());
+        $command = $application->find(GenerateThumbnailCommand::getDefaultName());
         $this->commandTester = new CommandTester($command);
 
         $this->imagine = new Imagine();
-    }
 
-    /**
-     * @test
-     */
-    public function it_has_default_upload_directory(): void
-    {
-        $this->commandTester->execute([]);
-
-        $output = $this->commandTester->getDisplay();
-        $this->commandTester->assertCommandIsSuccessful();
-        $this->assertStringContainsString(sprintf('Current upload directory: %s/upload', $this->rootDir), $output);
+        $this->thumbnailRepository = $kernel
+            ->getContainer()->get('App\Infrastructure\Repository\InMemoryThumbnailRepository');
     }
 
     /**
@@ -79,6 +72,21 @@ final class GenerateThumbnailTest extends KernelTestCase
         foreach ($images as $image) {
             $this->assertStringContainsString(sprintf('[%s/%s] %s', $this->path(), $image, $image), $output);
         }
+    }
+
+    /**
+     * @test
+     */
+    public function it_generates_and_saves_thumbnails(): void
+    {
+        $images = ['a.jpg', 'b.jpg', 'c.jpg'];
+        $this->thereAreSomeImages($images);
+        $this->commandTester->setInputs(['b.jpg,a.jpg,c.jpg']);
+        $this->commandTester->execute(['--upload-dir' => self::TEST_UPLOAD_DIR]);
+        $this->commandTester->assertCommandIsSuccessful();
+
+        $thumbnails = $this->thumbnailRepository->findAll();
+        $this->assertCount(3, $thumbnails);
     }
 
     /**
