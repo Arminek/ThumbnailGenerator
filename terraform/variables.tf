@@ -37,5 +37,5 @@ variable "app_server_docker_image" {
 
 variable "aws_s3_thumbnail_bucket_name" {
     type = string
-    default = "thumbnails"
+    default = "thumbnails.arminek.s3.bucket"
 }
