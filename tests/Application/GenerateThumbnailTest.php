@@ -85,8 +85,10 @@ final class GenerateThumbnailTest extends KernelTestCase
         $this->commandTester->execute(['--upload-dir' => self::TEST_UPLOAD_DIR]);
         $this->commandTester->assertCommandIsSuccessful();
 
+        $output = $this->commandTester->getDisplay();
         $thumbnails = $this->thumbnailRepository->findAll();
         $this->assertCount(3, $thumbnails);
+        $this->assertStringContainsString('Thumbnail generated for', $output);
     }
 
     /**

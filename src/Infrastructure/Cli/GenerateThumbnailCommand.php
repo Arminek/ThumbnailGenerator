@@ -80,13 +80,16 @@ final class GenerateThumbnailCommand extends Command
             $chosenImages = $helper->ask($input, $output, $question);
 
             foreach ($chosenImages as $chosenImage) {
+                $width = $input->getOption('width');
+                $height = $input->getOption('height');
                 $this->messageBus->dispatch(
                     new GenerateThumbnail(
                         $choices[$chosenImage],
-                        $input->getOption('width'),
-                        $input->getOption('height')
+                        $width,
+                        $height
                     )
                 );
+                $output->writeln(sprintf('Thumbnail generated for: %s (%sx%s)', $chosenImage, $width, $height));
             }
         }
 
