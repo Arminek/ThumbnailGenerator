@@ -29,18 +29,6 @@ variable "module_namespace" {
     default = "thumbnail-generator"
 }
 
-variable "ghcr_username" {
-    type = string
-}
-
-variable "ghcr_password" {
-    type = string
-}
-
-variable "ghcr_email" {
-    type = string
-}
-
 variable "app_name" {
     type    = string
     default = "thumbnail-generator-api"
