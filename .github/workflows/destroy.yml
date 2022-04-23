@@ -1,0 +1,28 @@
+name: Destroy
+
+on:
+  workflow_dispatch: ~
+
+env:
+  REGISTRY: ghcr.io
+  PHP_IMAGE_NAME: arminek/thumbnail-generator-php
+  CADDY_IMAGE_NAME: arminek/thumbnail-generator-caddy
+
+jobs:
+  destroy:
+    runs-on: ubuntu-latest
+    name: "Destroy"
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set outputs
+        id: vars
+        run: echo "::set-output name=sha_short::sha-$(git rev-parse HEAD)"
+      - name: Check outputs
+        run: echo ${{ steps.vars.outputs.sha_short }}
+      - uses: hashicorp/setup-terraform@v1
+        with:
+          cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+      - run: |
+          cd terraform
+          terraform init
+          terraform destroy -auto-approve -var="app_server_docker_image=${{ env.REGISTRY }}/${{ env.CADDY_IMAGE_NAME }}:${{ steps.vars.outputs.sha_short }}" -var="app_php_docker_image=${{ env.REGISTRY }}/${{ env.PHP_IMAGE_NAME }}:${{ steps.vars.outputs.sha_short }}" -var="digital_ocean_access_token=${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}" -var="aws_access_key=${{ secrets.AWS_ACCESS_KEY_ID }}" -var="aws_secret_key=${{ secrets.AWS_SECRET_KEY }}" -lock-timeout=10m
